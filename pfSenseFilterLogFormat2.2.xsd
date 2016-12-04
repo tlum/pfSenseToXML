@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1">
+	<!--Log Entry-->
+	<xs:element name="root">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="log-entry" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="log-entry">
+								<xs:sequence>
+									<xs:element name="log-data" type="log-data"/>
+								</xs:sequence>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="carp-data">
+		<xs:attribute name="carp-type" type="carp-type" use="required"/>
+		<xs:attribute name="carp-ttl" type="carp-ttl" use="required"/>
+		<xs:attribute name="vhid" type="vhid" use="required"/>
+		<xs:attribute name="version" type="version" use="required"/>
+		<xs:attribute name="advbase" type="advbase" use="required"/>
+		<xs:attribute name="advskew" type="advskew" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="echo-data">
+		<xs:attribute name="echo-id" type="echo-identifier" use="required"/>
+		<xs:attribute name="echo-sequence" type="echo-sequence-number" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="icmp-data">
+		<xs:choice>
+			<xs:element name="echo-data" type="echo-data"/>
+			<xs:element name="unreachproto-data" type="unreachproto-data"/>
+			<xs:element name="unreachport-data" type="unreachport-data"/>
+			<xs:element name="other-unreachable-data" type="other-unreachable-data"/>
+			<xs:element name="needfrag-data" type="needfrag-data"/>
+			<xs:element name="tstamp-data" type="tstamp-data"/>
+			<xs:element name="tstampreply-data" type="tstampreply-data"/>
+			<xs:element name="icmp-default-data" type="icmp-default-data"/>
+		</xs:choice>
+		<xs:attribute name="icmp-type" type="icmp-type" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="icmp-default-data">
+		<xs:attribute name="icmp-description" type="icmp-description" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ip-specific-data">
+		<xs:choice>
+			<xs:element name="ipv4-specific-data" type="ipv4-specific-data"/>
+			<xs:element name="ipv6-specific-data" type="ipv6-specific-data"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="ipv4-specific-data">
+		<xs:choice>
+			<xs:element name="tcp-data" type="tcp-data"/>
+			<xs:element name="udp-data" type="udp-data"/>
+			<xs:element name="icmp-data" type="icmp-data"/>
+			<xs:element name="carp-data" type="carp-data"/>
+		</xs:choice>
+		<xs:attribute name="tos" type="tos" use="optional"/>
+		<xs:attribute name="ecn" type="ecn" use="optional"/>
+		<xs:attribute name="ttl" type="ttl" use="required"/>
+		<xs:attribute name="id" type="id" use="required"/>
+		<xs:attribute name="offset" type="offset" use="required"/>
+		<xs:attribute name="flags" type="flags" use="required"/>
+		<xs:attribute name="protocol-id" type="protocol-id" use="required"/>
+		<xs:attribute name="protocol-text" type="protocol-text" use="required"/>
+		<xs:attribute name="length" type="length" use="required"/>
+		<xs:attribute name="source-address" type="ipv4-address" use="required"/>
+		<xs:attribute name="destination-address" type="ipv4-address" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ipv6-specific-data">
+		<xs:choice>
+			<xs:element name="tcp-data" type="tcp-data"/>
+			<xs:element name="udp-data" type="udp-data"/>
+			<xs:element name="icmp-data" type="icmp-data"/>
+			<xs:element name="carp-data" type="carp-data"/>
+		</xs:choice>
+		<xs:attribute name="class" type="tos" use="required"/>
+		<xs:attribute name="flow-label" type="flow-label" use="required"/>
+		<xs:attribute name="hop-limit" type="hop-limit" use="required"/>
+		<xs:attribute name="protocol-text" type="IPv6-protocol-text" use="required"/>
+		<xs:attribute name="protocol-id" type="protocol-id" use="required"/>
+		<xs:attribute name="length" type="length" use="required"/>
+		<xs:attribute name="source-address" type="ipv6-address" use="required"/>
+		<xs:attribute name="destination-address" type="ipv6-address" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="log-data">
+		<xs:choice>
+			<xs:element name="ipv4-specific-data" type="ipv4-specific-data"/>
+			<xs:element name="ipv6-specific-data" type="ipv6-specific-data"/>
+		</xs:choice>
+		<xs:attribute name="rule-number" type="rule-number" use="required"/>
+		<xs:attribute name="sub-rule-number" type="sub-rule-number" use="required"/>
+		<xs:attribute name="anchor" type="anchor" use="optional"/>
+		<xs:attribute name="tracker" type="tracker" use="required"/>
+		<xs:attribute name="real-interface" type="real-interface" use="required"/>
+		<xs:attribute name="reason" type="reason" use="required"/>
+		<xs:attribute name="action" type="action" use="required"/>
+		<xs:attribute name="direction" type="direction" use="required"/>
+		<xs:attribute name="ip-version" type="ip-version" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="log-entry">
+		<xs:attribute name="timestamp"/>
+		<xs:attribute name="hostname"/>
+	</xs:complexType>
+	<xs:complexType name="needfrag-data">
+		<xs:attribute name="icmp-destination-ip-address" type="icmp-destination-ip-address" use="required"/>
+		<xs:attribute name="icmp-mtu" type="icmp-mtu" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="other-unreachable-data">
+		<xs:attribute name="icmp-description" type="icmp-description" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="protocol-specific-data"/>
+	<xs:complexType name="tcp-data">
+		<xs:attribute name="source-port" type="port" use="required"/>
+		<xs:attribute name="destination-port" type="port" use="required"/>
+		<xs:attribute name="data-length" type="data-length" use="required"/>
+		<xs:attribute name="tcp-flags" type="tcp-flags" use="optional"/>
+		<xs:attribute name="sequence-number" type="tcp-sequence-number" use="required"/>
+		<xs:attribute name="ack-number" type="tcp-ack-number" use="optional"/>
+		<xs:attribute name="tcp-window" type="tcp-window" use="required"/>
+		<xs:attribute name="urg" type="urg" use="optional"/>
+		<xs:attribute name="tcp-options" type="tcp-options" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="tstamp-data">
+		<xs:attribute name="icmp-id" type="icmp-id" use="required"/>
+		<xs:attribute name="icmp-sequence" type="icmp-sequence" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="tstampreply-data">
+		<xs:attribute name="icmp-otime" type="icmp-otime" use="required"/>
+		<xs:attribute name="icmp-rtime" type="icmp-rtime" use="required"/>
+		<xs:attribute name="icmp-ttime" type="icmp-ttime" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="udp-data">
+		<xs:attribute name="source-port" type="port" use="required"/>
+		<xs:attribute name="destination-port" type="port" use="required"/>
+		<xs:attribute name="data-length" type="data-length" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="unreachport-data">
+		<xs:attribute name="icmp-destination-ip-address" use="required"/>
+		<xs:attribute name="unreachable-protocol-id" type="unreachable-protocol-id" use="required"/>
+		<xs:attribute name="unreachable-port-number" type="unreachable-port-number" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="unreachproto-data">
+		<xs:attribute name="icmp-destination-ip-address" type="icmp-destination-ip-address" use="required"/>
+		<xs:attribute name="unreachable-protocol-id" type="unreachable-protocol-id" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="action">
+		<xs:annotation>
+			<xs:documentation>Action taken that resulted in the log entry</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="pass"/>
+			<xs:enumeration value="block"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="advbase">
+		<xs:annotation>
+			<xs:documentation>Advertisement base timer interval (seconds)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort"/>
+	</xs:simpleType>
+	<xs:simpleType name="advskew">
+		<xs:annotation>
+			<xs:documentation>Advertisement skew (1/256 of a second)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort"/>
+	</xs:simpleType>
+	<xs:simpleType name="anchor">
+		<xs:annotation>
+			<xs:documentation>Anchor name in which the rule exists</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="carp-ttl">
+		<xs:annotation>
+			<xs:documentation>Time to Live</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort"/>
+	</xs:simpleType>
+	<xs:simpleType name="carp-type">
+		<xs:annotation>
+			<xs:documentation>Type of CARP/VRRP</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="class">
+		<xs:annotation>
+			<xs:documentation>ToS traffic class</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:hexBinary"/>
+	</xs:simpleType>
+	<xs:simpleType name="data-length">
+		<xs:annotation>
+			<xs:documentation>Data/payload length</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="direction">
+		<xs:annotation>
+			<xs:documentation>Direction of the logged traffic</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="in"/>
+			<xs:enumeration value="out"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="echo-identifier">
+		<xs:annotation>
+			<xs:documentation>This field is used to help match echo requests to the associated reply. It may be cleared to zero.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="65535"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="echo-sequence-number">
+		<xs:annotation>
+			<xs:documentation>This field is used to help match echo requests to the associated reply. It may be cleared to zero.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="65535"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ecn">
+		<xs:annotation>
+			<xs:documentation>Explicit Congestion Notification</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="flags">
+		<xs:annotation>
+			<xs:documentation>IP Flags (NOT TCP flags -- those are later)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="DF"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="flow-label">
+		<xs:annotation>
+			<xs:documentation>Flow label</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="hop-limit">
+		<xs:annotation>
+			<xs:documentation>Hop Limit (similar to IPv4 TTL)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer"/>
+	</xs:simpleType>
+	<xs:simpleType name="icmp-description">
+		<xs:annotation>
+			<xs:documentation>Description from the ICMP packet</xs:documentation>
+		</xs:annotation>
+		<xs:list itemType="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="icmp-destination-ip-address">
+		<xs:annotation>
+			<xs:documentation>Original destination address of the connection that caused this notification</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="ip-address"/>
+	</xs:simpleType>
+	<xs:simpleType name="icmp-id">
+		<xs:annotation>
+			<xs:documentation>ID of the echo request/reply</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort"/>
+	</xs:simpleType>
+	<xs:simpleType name="icmp-mtu">
+		<xs:annotation>
+			<xs:documentation>MTU to use for subsequent data to this destination</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort"/>
+	</xs:simpleType>
+	<xs:simpleType name="icmp-otime">
+		<xs:annotation>
+			<xs:documentation>Originate Timestamp</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedInt"/>
+	</xs:simpleType>
+	<xs:simpleType name="icmp-rtime">
+		<xs:annotation>
+			<xs:documentation>Receive Timestamp</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedInt"/>
+	</xs:simpleType>
+	<xs:simpleType name="icmp-sequence">
+		<xs:annotation>
+			<xs:documentation>Sequence number of the echo request/reply</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort"/>
+	</xs:simpleType>
+	<xs:simpleType name="icmp-ttime">
+		<xs:annotation>
+			<xs:documentation>Transmit Timestamp</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedInt"/>
+	</xs:simpleType>
+	<xs:simpleType name="icmp-type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="unreachproto"/>
+			<xs:enumeration value="unreachport"/>
+			<xs:enumeration value="needfrag"/>
+			<xs:enumeration value="tstamp"/>
+			<xs:enumeration value="tstampreply"/>
+			<xs:enumeration value="request"/>
+			<xs:enumeration value="reply"/>
+			<xs:enumeration value="unreach"/>
+			<xs:enumeration value="timexceed"/>
+			<xs:enumeration value="paramprob"/>
+			<xs:enumeration value="redirect"/>
+			<xs:enumeration value="maskreply"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="id">
+		<xs:annotation>
+			<xs:documentation>ID of the packet</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer"/>
+	</xs:simpleType>
+	<xs:simpleType name="ip-address">
+		<xs:union memberTypes="ipv4-address ipv6-address"/>
+	</xs:simpleType>
+	<xs:simpleType name="ipv4-address">
+		<xs:annotation>
+			<xs:documentation>IPv4 address in the dotted-decimal notation.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ipv6-address">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="IPv6-protocol-text">
+		<xs:annotation>
+			<xs:documentation>IP protocol text (examples given) </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="tcp"/>
+			<xs:enumeration value="UDP"/>
+			<xs:enumeration value="icmp"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ip-version">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="4"/>
+			<xs:enumeration value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="length">
+		<xs:annotation>
+			<xs:documentation>Length of the packet in bytes</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer"/>
+	</xs:simpleType>
+	<xs:simpleType name="offset">
+		<xs:annotation>
+			<xs:documentation>Fragment offset</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer"/>
+	</xs:simpleType>
+	<xs:simpleType name="port">
+		<xs:annotation>
+			<xs:documentation>
+        Port number in the range [1, 65536].
+      </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="65535"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="protocol-id">
+		<xs:annotation>
+			<xs:documentation>IP protocol ID (e.g. 6 for TCP, 17 for UDP)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer"/>
+	</xs:simpleType>
+	<xs:simpleType name="protocol-text">
+		<xs:annotation>
+			<xs:documentation>IP protocol text (examples given) </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="tcp"/>
+			<xs:enumeration value="udp"/>
+			<xs:enumeration value="icmp"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="real-interface">
+		<xs:annotation>
+			<xs:documentation>Real interface for the log entry (e.g. em0)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="reason">
+		<xs:annotation>
+			<xs:documentation>Reason for the log entry (typically "match")</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="rule-number">
+		<xs:annotation>
+			<xs:documentation>Rule number in the pf Ruleset</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer"/>
+	</xs:simpleType>
+	<xs:simpleType name="sub-rule-number">
+		<xs:annotation>
+			<xs:documentation>Sub rule number in the pf Ruleset (not typically significant for general use)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer"/>
+	</xs:simpleType>
+	<xs:simpleType name="tcp-ack-number">
+		<xs:annotation>
+			<xs:documentation>ACK number</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedInt">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="4294967295"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tcp-flags">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="tcp-options">
+		<xs:annotation>
+			<xs:documentation>TCP Options</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="tcp-sequence-number">
+		<xs:annotation>
+			<xs:documentation>TCP Sequence ID</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedInt">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="4294967295"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tcp-window">
+		<xs:annotation>
+			<xs:documentation>Windows size</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="65535"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tos">
+		<xs:annotation>
+			<xs:documentation>Type of Service identification</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="tracker">
+		<xs:annotation>
+			<xs:documentation>Unique ID per rule, tracker ID is stored with the rule in config.xml for user added rules, or check /tmp/rules.debug</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer"/>
+	</xs:simpleType>
+	<xs:simpleType name="ttl">
+		<xs:annotation>
+			<xs:documentation>Time To Live (TTL) of the packet</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer"/>
+	</xs:simpleType>
+	<xs:simpleType name="unreachable-port-number">
+		<xs:annotation>
+			<xs:documentation>Port number that was unreachable</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort"/>
+	</xs:simpleType>
+	<xs:simpleType name="unreachable-protocol-id">
+		<xs:annotation>
+			<xs:documentation>Protocol ID number that was unreachable</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="urg">
+		<xs:annotation>
+			<xs:documentation>Urgent pointer data</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort"/>
+	</xs:simpleType>
+	<xs:simpleType name="version">
+		<xs:annotation>
+			<xs:documentation>CARP Version</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort"/>
+	</xs:simpleType>
+	<xs:simpleType name="vhid">
+		<xs:annotation>
+			<xs:documentation>Virtual Host ID</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedShort"/>
+	</xs:simpleType>
+</xs:schema>
